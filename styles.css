@@ -16,7 +16,11 @@
     --color-overlay-blue: rgba(74, 144, 226, 0.2);
     --color-overlay-blue-strong: rgba(74, 144, 226, 0.5);
 }
-
+img{
+    width: 60% !important;
+    height:50% !important;
+    animation:spawn 0.5s;
+}
 body {
     margin: 0;
     padding: 20px;

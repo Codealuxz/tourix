@@ -70,6 +70,7 @@ let gameSpeed = 1;
 let previewTower = null;
 let isPlacingTower = false;
 let isPlacingDoubleTower = false;
+let isPaused = false;
 
 let cheatSequence = [];
 let cheatCode = ['c', 'h', 'e', 'a', 't'];
@@ -655,7 +656,7 @@ function startNextWave() {
 }
 
 function gameLoop() {
-    if (gameOver) return;
+    if (gameOver || isPaused) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawGrid();
@@ -917,10 +918,6 @@ function goToWave() {
     const targetWave = parseInt(document.getElementById('waveInput').value);
     if (targetWave < 1) return;
 
-    // Donner des ressources proportionnelles à la vague
-    money = 100 + (targetWave - 1) * 200;
-    document.getElementById('money').textContent = money;
-
     // Mettre à jour la vague actuelle
     currentWave = targetWave;
 
@@ -941,4 +938,16 @@ function goToWave() {
 
     // Mettre à jour les boutons
     updateButtonStates();
+}
+
+function togglePause() {
+    isPaused = !isPaused;
+    const pauseButton = document.getElementById('pauseButton');
+    if (isPaused) {
+        pauseButton.textContent = 'Reprendre';
+        clearInterval(spawnInterval);
+    } else {
+        pauseButton.textContent = 'Pause';
+        updateSpawnInterval();
+    }
 }

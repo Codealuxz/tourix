@@ -70,7 +70,6 @@ let gameSpeed = 1;
 let previewTower = null;
 let isPlacingTower = false;
 let isPlacingDoubleTower = false;
-let isPaused = false;
 
 let cheatSequence = [];
 let cheatCode = ['c', 'h', 'e', 'a', 't'];
@@ -656,7 +655,7 @@ function startNextWave() {
 }
 
 function gameLoop() {
-    if (gameOver || isPaused) return;
+    if (gameOver) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawGrid();
@@ -695,6 +694,7 @@ function init() {
     addWaveDisplay();
     updateBestWave();
     updateButtonStates();
+    addPauseButton();
     canvas.addEventListener('click', handleTowerClick);
     canvas.addEventListener('mousemove', handleTowerHover);
     canvas.addEventListener('mouseleave', () => {
@@ -940,14 +940,24 @@ function goToWave() {
     updateButtonStates();
 }
 
-function togglePause() {
-    isPaused = !isPaused;
-    const pauseButton = document.getElementById('pauseButton');
-    if (isPaused) {
-        pauseButton.textContent = 'Reprendre';
-        clearInterval(spawnInterval);
-    } else {
-        pauseButton.textContent = 'Pause';
-        updateSpawnInterval();
-    }
+// Function to add the Pause button
+function addPauseButton() {
+    const pauseButton = document.createElement('button');
+    pauseButton.textContent = 'Pause';
+    pauseButton.style.position = 'absolute';
+    pauseButton.style.top = '10px';
+    pauseButton.style.right = '10px';
+    pauseButton.style.zIndex = '1000';
+    pauseButton.onclick = () => {
+        if (gameSpeed === 0) {
+            gameSpeed = 1;
+            pauseButton.textContent = 'Pause';
+        } else {
+            gameSpeed = 0;
+            pauseButton.textContent = 'Reprendre';
+        }
+        document.getElementById('speedSlider').value = gameSpeed;
+        document.getElementById('speedValue').textContent = gameSpeed.toFixed(1);
+    };
+    document.body.appendChild(pauseButton);
 }
